@@ -1,16 +1,17 @@
 package motor;
 
-import java.util.List;
-import java.util.Set;
-
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoIterable;
+
 
 public class PruebaMongoDB {
-MongoClient client = new MongoClient( "localhost" , 27017);
-	public void pruebas(){
-		DB db = client.getDB("mydb");
-		Set<String> collectionNames = db.getCollectionNames();
+	
+	public static void main(String[] args){
+		MongoClient client = new MongoClient( "localhost" , 27017);
+			
+		MongoDatabase db = client.getDatabase("mydb");
+		MongoIterable<String> collectionNames = db.listCollectionNames();
 			for (final String s : collectionNames) {
 			    System.out.println(s);
 			}
