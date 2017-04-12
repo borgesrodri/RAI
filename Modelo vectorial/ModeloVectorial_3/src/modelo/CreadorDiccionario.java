@@ -137,6 +137,7 @@ public class CreadorDiccionario {
 		for(int i =0; i < ficheros.size(); i++){
 			List<String> linea = limpiador(ficheros.get(i));
 			ArrayList<String> separadas = separador(linea);
+			
 			diccionario.add(contador(separadas));
 		}
 		return diccionario;
