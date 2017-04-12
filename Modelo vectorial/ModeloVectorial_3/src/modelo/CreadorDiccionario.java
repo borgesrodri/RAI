@@ -9,69 +9,62 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.Document;
 import org.jsoup.Jsoup;
 
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoIterable;
+
 public class CreadorDiccionario {
-	private static ArrayList<List<String>> ficheros;
-	private static ArrayList<String> nombreFicheros;
-	private static Map<String, Integer> idf;
+	private static Document idf;
+	String nombreHTML = "";
 	//Constructores
 	public CreadorDiccionario(){
-		ficheros = new ArrayList<List<String>>();
-		nombreFicheros = new ArrayList<String>();
-		idf = new HashMap<>();
+		idf = new Document("_id", "IDF");
 	}
 	
-	//Setters and getters
-	public static ArrayList<List<String>> getFicheros() {
-		return ficheros;
-	}
-
-
-	public static void setFicheros(ArrayList<List<String>> ficheros) {
-		CreadorDiccionario.ficheros = ficheros;
-	}
-
-	public static ArrayList<String> getNombreFicheros() {
-		return nombreFicheros;
-	}
-
-	public static void setNombreFicheros(ArrayList<String> nombreFicheros) {
-		CreadorDiccionario.nombreFicheros = nombreFicheros;
-	}
-	
-	public static Map<String, Integer> getIdf() {
+	//Setters and getters	
+	public static Document getIdf() {
 		return idf;
 	}
 
-	public static void setIdf(Map<String, Integer> idf) {
+	public static void setIdf(Document idf) {
 		CreadorDiccionario.idf = idf;
 	}
 
 	//Metodos
 	//Este método es el encargado de leer todos los ficheros HTML que se encuentran en 
 	//el direcctorio "./htmls/" y guardarlos en el array de nombreFicheros
-	public void leerFicherosHtml() throws IOException{
-		String ruta = "./htmls/";
+	public void crearDiccionario() throws IOException{
+		MongoClient client = new MongoClient( "localhost" , 27017);	
+		MongoDatabase db = client.getDatabase("motor");
+		MongoCollection<Document> dic = db.getCollection("diccionario");
+		
+		String ruta = "C:/Users/borge/Desktop/clase/2016-2017/Segundo cuatri/rai/Motor/2010-documents.biased/49";
 		File dir = new File(ruta);
 		File[] archivos = dir.listFiles();
 		for(int i = 0; i < archivos.length; i++){
 			File archivo = null;
 		    FileReader fr = null;
 		    BufferedReader br = null;
-		    List<String> fichero = null;
+		    String fichero = "";
 		      try {
 		         archivo = new File (archivos[i].toString());
-		         nombreFicheros.add(archivos[i].toString().replace(".\\htmls\\", ""));
+		         nombreHTML = archivos[i].toString().replace(".\\htmls\\", "");
 		         fr = new FileReader (archivo);
 		         br = new BufferedReader(fr);
-		         fichero = new ArrayList<String>();
 		         // Lectura del fichero
 		         String linea;
 		         while((linea = br.readLine()) != null){
-		        	 fichero.add(linea.toLowerCase());
+		        	 fichero += " " + linea.toLowerCase();
 		         } 
-		         ficheros.add(fichero); 
+		         fichero = limpiador(fichero);
+		         String[] palabras = separador(fichero);
+		         Document doc = contador(palabras);
+		         dic.insertOne(doc);
+		         
 		      }
 		      catch(Exception e){
 		         e.printStackTrace();
@@ -85,35 +78,27 @@ public class CreadorDiccionario {
 		         }
 		      }
 		}
+		//dic.insertOne(idf);
 	}
 	//Eliminar las etiquetas de html y dejar solo el texto plano
-	public List<String> limpiador(List<String> html){
-		List<String> result = new ArrayList<String>();
-		for(int i = 0; i < html.size(); i++){
-			String linea = html.get(i);
-			linea = linea.replace(">", "> ");
-			String palabras = Jsoup.parse(linea).text();
-			result.add(palabras.replaceAll("[^a-zA-Z0-9 ]"," "));
-		}
-		return result;
+	public String limpiador(String html){
+		html = html.replace(">", "> ");
+		html = Jsoup.parse(html).text();
+		html = html.replaceAll("[^a-zA-Z0-9 ]"," ");
+		return html;
 	}
 	//Separar las palabras en String diferentes
-	public ArrayList<String> separador(List<String> texto){
-		ArrayList<String> palabras = new ArrayList<String>();
+	public String[] separador(String html){
 		Indizador index = new Indizador();
-		for(int i = 0; i < texto.size(); i++){
-			String[] aux = texto.get(i).split(" ");
-			for(int a = 0; a < aux.length; a++){
-				palabras.add(index.stemTerm(aux[a]));
-			}
-			
+		String[] aux = html.split(" ");
+		for(int a = 0; a < aux.length; a++){
+			aux[a] = index.stemTerm(aux[a]);
 		}
-		
-		return palabras;
+		return aux;
 	}
 	//Guardar las palabras con su frecuencia
-	public Map<String, Integer> contador(ArrayList<String> separadas){
-		Map<String, Integer> nameAndCount = new HashMap<>(); // build hash table with count 
+	public Document contador(String[] separadas){
+		Document nameAndCount = new Document("_id", nombreHTML); // SI HAY HILOS BORRA ESTA LINEA
 		for (String name : separadas) { 
 		    if(!name.equals("") && name.length()>1){
 		    if (!nameAndCount.containsKey(name) ){
@@ -121,25 +106,15 @@ public class CreadorDiccionario {
 		        if(!idf.containsKey(name)){
 		        	idf.put(name, 1);
 		        }else { 
-			        idf.put(name, idf.get(name)+1);
+			        idf.append(name, idf.getInteger(name)+1);
 			        
 			    } 
 		    } else { 
-		        nameAndCount.put(name, nameAndCount.get(name)+1); 
+		        nameAndCount.put(name, nameAndCount.getInteger(name)+1); 
 		    } 
 		    }
 		}
 		return nameAndCount;
 	}
 	
-	public ArrayList<Map<String,Integer>> crearDiccionario() throws IOException{
-		ArrayList<Map<String,Integer>> diccionario = new ArrayList<Map<String,Integer>>();
-		leerFicherosHtml();
-		for(int i =0; i < ficheros.size(); i++){
-			List<String> linea = limpiador(ficheros.get(i));
-			ArrayList<String> separadas = separador(linea);
-			diccionario.add(contador(separadas));
-		}
-		return diccionario;
-	}
 }
