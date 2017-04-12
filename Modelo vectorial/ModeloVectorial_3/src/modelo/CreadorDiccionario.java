@@ -99,11 +99,12 @@ public class CreadorDiccionario {
 	}
 	//Separar las palabras en String diferentes
 	public ArrayList<String> separador(List<String> texto){
-		ArrayList<String> palabras = new ArrayList<String>();;
+		ArrayList<String> palabras = new ArrayList<String>();
+		Indizador index = new Indizador();
 		for(int i = 0; i < texto.size(); i++){
 			String[] aux = texto.get(i).split(" ");
 			for(int a = 0; a < aux.length; a++){
-				palabras.add(aux[a]);
+				palabras.add(index.stemTerm(aux[a]));
 			}
 			
 		}
@@ -137,7 +138,6 @@ public class CreadorDiccionario {
 		for(int i =0; i < ficheros.size(); i++){
 			List<String> linea = limpiador(ficheros.get(i));
 			ArrayList<String> separadas = separador(linea);
-			
 			diccionario.add(contador(separadas));
 		}
 		return diccionario;
