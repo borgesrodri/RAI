@@ -13,6 +13,7 @@ import org.bson.Document;
 import org.jsoup.Jsoup;
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
@@ -29,7 +30,6 @@ public class CreadorDiccionario {
 	public static Document getIdf() {
 		return idf;
 	}
-
 	public static void setIdf(Document idf) {
 		CreadorDiccionario.idf = idf;
 	}
@@ -41,44 +41,60 @@ public class CreadorDiccionario {
 		MongoClient client = new MongoClient( "localhost" , 27017);	
 		MongoDatabase db = client.getDatabase("motor");
 		MongoCollection<Document> dic = db.getCollection("diccionario");
-		
-		String ruta = "C:/Users/borge/Desktop/clase/2016-2017/Segundo cuatri/rai/Motor/2010-documents.biased/49";
-		File dir = new File(ruta);
-		File[] archivos = dir.listFiles();
-		for(int i = 0; i < archivos.length; i++){
-			File archivo = null;
-		    FileReader fr = null;
-		    BufferedReader br = null;
-		    String fichero = "";
-		      try {
-		         archivo = new File (archivos[i].toString());
-		         nombreHTML = archivos[i].toString().replace(".\\htmls\\", "");
-		         fr = new FileReader (archivo);
-		         br = new BufferedReader(fr);
-		         // Lectura del fichero
-		         String linea;
-		         while((linea = br.readLine()) != null){
-		        	 fichero += " " + linea.toLowerCase();
-		         } 
-		         fichero = limpiador(fichero);
-		         String[] palabras = separador(fichero);
-		         Document doc = contador(palabras);
-		         dic.insertOne(doc);
-		         
-		      }
-		      catch(Exception e){
-		         e.printStackTrace();
-		      }finally{
-		         try{                    
-		            if( null != fr ){   
-		               fr.close();     
-		            }                  
-		         }catch (Exception e2){ 
-		            e2.printStackTrace();
-		         }
-		      }
+		for (int a = 0; a < 100; a++) {
+			String ruta = "";
+			if(a<10){
+				ruta = "./html/0"+a;
+			}else{
+				ruta = "./html/"+a;
+			}
+			File dir = new File(ruta);
+			File[] archivos = dir.listFiles();
+			for(int i = 0; i < archivos.length; i++){
+				File archivo = null;
+			    FileReader fr = null;
+			    BufferedReader br = null;
+			    String fichero = "";
+			      try {
+			         archivo = new File (archivos[i].toString());
+			         nombreHTML = archivos[i].toString().replace(".\\htmls\\", "");
+			         fr = new FileReader (archivo);
+			         br = new BufferedReader(fr);
+			         // Lectura del fichero
+			         String linea;
+			         while((linea = br.readLine()) != null){
+			        	 fichero += " " + linea.toLowerCase();
+			         } 
+			         fichero = limpiador(fichero);
+			         String[] palabras = separador(fichero);
+			         Document doc = contador(palabras);
+			         dic.insertOne(doc);
+			         
+			      }
+			      catch(Exception e){
+			         e.printStackTrace();
+			      }finally{
+			         try{                    
+			            if( null != fr ){   
+			               fr.close();     
+			            }                  
+			         }catch (Exception e2){ 
+			            e2.printStackTrace();
+			         }
+			      }
+			}
 		}
-		//dic.insertOne(idf);
+		int i = 0;
+		for (Map.Entry<String, Object> entry : idf.entrySet()) {
+			if(i !=0 ){
+				int a = (int) entry.getValue();
+				long b = dic.count();
+				double log = Math.log10(((double) b / (double) a));
+				idf.append(entry.getKey(), log);
+			}
+			i = 1;
+		}
+		dic.insertOne(idf);
 	}
 	//Eliminar las etiquetas de html y dejar solo el texto plano
 	public String limpiador(String html){
@@ -104,7 +120,7 @@ public class CreadorDiccionario {
 		    if (!nameAndCount.containsKey(name) ){
 		        nameAndCount.put(name, 1);
 		        if(!idf.containsKey(name)){
-		        	idf.put(name, 1);
+		        	idf.append(name, 1);
 		        }else { 
 			        idf.append(name, idf.getInteger(name)+1);
 			        

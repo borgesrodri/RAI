@@ -7,14 +7,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.bson.Document;
+
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
 public class Modelos {
 	public static void main(String[] args) throws IOException {
 		indice();
 	}
 	//Método para generar el indice con las posibilidades que se le da al usuario
 	public static void indice() throws IOException {
-		ArrayList<Map<String, Integer>> diccionario = new ArrayList<Map<String, Integer>>();
-		ArrayList<String> nombreFicheros = new ArrayList<String>();
 		Map<String, Double> idf = new HashMap<String, Double>();
 		int i = -1;
 		while (i != 9) {
@@ -23,25 +27,25 @@ public class Modelos {
 							+ "1. Crear/Actualizar diccionario \n "
 							+ "2. Realizar consulta \n " 
 							+ "4. Realizar consultas estáticas \n "
-							+ "0. Finalizar");
+							+ "9. Finalizar");
 			Scanner lector = new Scanner(System.in);
 			i = lector.nextInt();
 			switch (i) {
 			case 1:
-				CreadorDiccionario creador = new CreadorDiccionario();
-				diccionario = creador.crearDiccionario();
-				nombreFicheros = CreadorDiccionario.getNombreFicheros();
-				Map<String, Integer> aux = CreadorDiccionario.getIdf();
-				idf = new HashMap<String, Double>();
-				for (Map.Entry<String, Integer> entry : aux.entrySet()) {
-					double log = Math
-							.log10(((double) diccionario.size() / (double) entry
-									.getValue()));
-					idf.put(entry.getKey(), log);
+				MongoClient client = new MongoClient( "localhost" , 27017);	
+				MongoDatabase db = client.getDatabase("motor");
+				MongoCollection<Document> coll = db.getCollection("diccionario");
+				CreadorDiccionario dic = new CreadorDiccionario();
+				coll.drop();
+				try {
+					dic.crearDiccionario();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				System.out.println("El diccionario ha sido creado/actualizado");
 				break;
-			case 2:
+			/*case 2:
 				if (diccionario.isEmpty()) {
 					System.out
 							.println("Debe crear el diccionario antes de realizar una consulta");
@@ -120,14 +124,14 @@ public class Modelos {
 				for(int a = 0; a < 5; a++){
 					System.out.println(nombreFicheros.get(a)+"\t\t"+COS_TF_IDF1[a]+"\t"+COS_TF_IDF2[a]+"\t"+COS_TF_IDF3[a] );
 				}
-				break;
+				break;*/
 			}
 		}
 		System.out.println("Fin del programa.");
 	}
 
 	// MÉTODO PARA FORMATEAR LA CONSULTA
-	public static Map<String, Integer> consulta(String consulta) {
+	/*public static Map<String, Integer> consulta(String consulta) {
 		CreadorDiccionario creador = new CreadorDiccionario();
 		List<String> aux = new ArrayList<String>();
 		consulta = consulta.toLowerCase();
@@ -146,7 +150,7 @@ public class Modelos {
 			}
 		}
 		return pesos;
-	}
+	}*/
 
 	// MÉTODO PARA MOSTRAR LOS RESULTADOS POR PANTALLA
 	public static void mostrarResultados(double[] r,ArrayList<String> nombreFicheros) {
