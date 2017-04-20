@@ -20,11 +20,12 @@ public class PruebaMongoDB {
 	public static void main(String[] args){
 		MongoClient client = new MongoClient( "localhost" , 27017);	
 		MongoDatabase db = client.getDatabase("motor");
-		MongoCollection<Document> dic = db.getCollection("diccionario");
-		FindIterable<Document> result = dic.find();
-		for (Document document : result) {
-			System.out.println(document);
+		MongoCollection<Document> dic = db.getCollection("consultas");
+		FindIterable<Document> idfList = dic.find();
+		int i = 0;
+		for (Document doc : idfList) {
+			System.out.println(doc);
 		}
-		
+
 	}
 }

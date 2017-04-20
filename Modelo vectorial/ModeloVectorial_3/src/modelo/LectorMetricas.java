@@ -5,17 +5,20 @@ import java.io.File;
 import java.io.FileReader;
 
 import org.bson.Document;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
 public class LectorMetricas {
-	public static void main(String[] args) {
-		leerTopics();
-	}
-	public static  Document leerUnion(){
+	public Document leerUnion(){
 		File dir = new File("./2010.union.trel");
 		FileReader fr = null;
 		BufferedReader br = null;
@@ -33,7 +36,7 @@ public class LectorMetricas {
 		}
 		return doc;
 	}
-	public static Document leerTopics(){
+	public Document leerTopics(){
 		File fXmlFile = new File("./2010-topics.xml");
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		Document r = new Document("_id","topic");
@@ -55,5 +58,16 @@ public class LectorMetricas {
 			 e.printStackTrace();
 		}
 		return r;
+	}
+	
+	public void lecturas (){
+		MongoClient client = new MongoClient( "localhost" , 27017);	
+		MongoDatabase db = client.getDatabase("motor");
+		MongoCollection<Document> con = db.getCollection("consultas");
+		Document doc1 = leerUnion();
+		Document doc2 = leerTopics();
+		con.drop();
+		con.insertOne(doc2);
+		con.insertOne(doc1);
 	}
 }

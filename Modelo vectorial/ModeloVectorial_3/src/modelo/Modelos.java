@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 import org.bson.Document;
@@ -15,11 +16,16 @@ import com.mongodb.client.MongoDatabase;
 
 public class Modelos {
 	public static void main(String[] args) throws IOException {
-		indice();
+		Map<String, Double> idf = new HashMap<String, Double>();
+		MongoClient client = new MongoClient( "localhost" , 27017);	
+		MongoDatabase db = client.getDatabase("motor");
+		MongoCollection<Document> dic = db.getCollection("diccionario");
+		MongoCollection<Document> con = db.getCollection("consultas");
+		indice(dic, con);
 	}
 	//Método para generar el indice con las posibilidades que se le da al usuario
-	public static void indice() throws IOException {
-		Map<String, Double> idf = new HashMap<String, Double>();
+	public static void indice(MongoCollection<Document> dic, MongoCollection<Document> con) throws IOException {
+		
 		int i = -1;
 		while (i != 9) {
 			System.out
@@ -31,113 +37,60 @@ public class Modelos {
 			Scanner lector = new Scanner(System.in);
 			i = lector.nextInt();
 			switch (i) {
+			
 			case 1:
-				MongoClient client = new MongoClient( "localhost" , 27017);	
-				MongoDatabase db = client.getDatabase("motor");
-				MongoCollection<Document> coll = db.getCollection("diccionario");
-				CreadorDiccionario dic = new CreadorDiccionario();
-				coll.drop();
+				LectorMetricas lm = new LectorMetricas();
+				lm.lecturas();
+				CreadorDiccionario cd = new CreadorDiccionario();
+				dic.drop();
 				try {
-					dic.crearDiccionario();
+					cd.crearDiccionario();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				System.out.println("El diccionario ha sido creado/actualizado");
 				break;
-			/*case 2:
-				if (diccionario.isEmpty()) {
+			case 2:
+				if (dic.count() == 0) {
 					System.out
 							.println("Debe crear el diccionario antes de realizar una consulta");
 					break;
 				}
 				System.out.println("Introduzca la consulta que desea realizar");
 				Scanner teclado = new Scanner(System.in);
-				String consulta = teclado.nextLine();
-				Map<String, Integer> pesos = consulta(consulta);
-				Calculador calculador = new Calculador();
-				double[] PE_TF = calculador.calcularProdTF(pesos, diccionario);
-				double[] PE_TF_IDF = calculador.calcularProdTFIDF(pesos,
-						diccionario, idf);
-				double[] COS_TF = calculador.calcularCosenoTF(pesos,
-						diccionario);
-				double[] COS_TF_IDF = calculador.calcularCosenoTFIDF(pesos,
-						diccionario, idf);
-				System.out
-						.println("Los resultados se mostrarán por categoría y relevancia");
-				System.out.println("\n-- Producto escalar TF --");
-				mostrarResultados(PE_TF, nombreFicheros);
-				System.out.println("\n-- Producto escalar TF-IDF --");
-				mostrarResultados(PE_TF_IDF, nombreFicheros);
-				System.out.println("\n-- Coseno TF --");
-				mostrarResultados(COS_TF, nombreFicheros);
-				System.out.println("\n-- Coseno TF-IDF --");
-				mostrarResultados(COS_TF_IDF, nombreFicheros);
+				String consultaManual = teclado.nextLine();
+				Map<String, Integer> pesosManual = consulta(consultaManual);
+				Calculador calculadorManual = new Calculador();
+				double[] relevanciaManual = calculadorManual.CosTFIDF(pesosManual, dic);
 				break;
 			case 3:
-				if (diccionario.isEmpty()) {
+				if (dic.count() == 0) {
 					System.out
 							.println("Debe crear el diccionario antes de realizar una consulta");
 					break;
 				}
-				String q1 = "What video game won Spike's best driving game award in 2006?";
-				String q2 = "What is the default combination of Kensington cables?";
-				String q3 = "Who won the first ACM Gerard Salton prize?";
-				Map<String, Integer> p1 = consulta(q1);
-				Map<String, Integer> p2 = consulta(q2);
-				Map<String, Integer> p3 = consulta(q3);
-				Calculador c = new Calculador();
-				double[] PE_TF1 = c.calcularProdTF(p1, diccionario);
-				double[]PE_TF_IDF1 = c.calcularProdTFIDF(p1,
-						diccionario, idf);
-				double[]COS_TF1 = c.calcularCosenoTF(p1,
-						diccionario);
-				double[]COS_TF_IDF1 = c.calcularCosenoTFIDF(p1,
-						diccionario, idf);
-				double[] PE_TF2 = c.calcularProdTF(p2, diccionario);
-				double[]PE_TF_IDF2 = c.calcularProdTFIDF(p2,
-						diccionario, idf);
-				double[]COS_TF2 = c.calcularCosenoTF(p2,
-						diccionario);
-				double[]COS_TF_IDF2 = c.calcularCosenoTFIDF(p2,
-						diccionario, idf);
-				double[] PE_TF3 = c.calcularProdTF(p3, diccionario);
-				double[]PE_TF_IDF3 = c.calcularProdTFIDF(p3,
-						diccionario, idf);
-				double[]COS_TF3 = c.calcularCosenoTF(p3,
-						diccionario);
-				double[]COS_TF_IDF3 = c.calcularCosenoTFIDF(p3,
-						diccionario, idf);
-				System.out.println("-- Producto Escalar TF -- \tQ1\tQ2\tQ3");
-				for(int a = 0; a < 5; a++){
-					System.out.println(nombreFicheros.get(a)+"\t\t"+PE_TF1[a]+"\t"+PE_TF2[a]+"\t"+PE_TF3[a] );
+				ArrayList<double[]> relevancias = new ArrayList<double[]>();
+				ArrayList<Map<String, Integer>> consultas = new ArrayList<Map<String, Integer>>();
+				Calculador calculador = new Calculador();
+				Document cons = con.find().first();
+				for ( Entry<String, Object>  consulta : cons.entrySet()) {
+					Map<String, Integer> pesos = consulta(consulta.getValue().toString());
+					consultas.add(pesos);
+					relevancias.add(calculador.CosTFIDF(pesos,dic));
 				}
-				System.out.println("-- Producto Escalar TF-IDF -- \tQ1\t\t\tQ2\t\t\tQ3");
-				for(int a = 0; a < 5; a++){
-					System.out.println(nombreFicheros.get(a)+"\t\t"+PE_TF_IDF1[a]+"\t"+PE_TF_IDF2[a]+"\t"+PE_TF_IDF3[a] );
-				}
-				System.out.println("-- Producto Escalar TF-- \tQ1\t\t\tQ2\t\t\tQ3");
-				for(int a = 0; a < 5; a++){
-					System.out.println(nombreFicheros.get(a)+"\t\t"+COS_TF1[a]+"\t"+COS_TF2[a]+"\t"+COS_TF3[a] );
-				}
-				System.out.println("-- Producto Escalar TF-- \tQ1\t\t\tQ2\t\t\tQ3");
-				for(int a = 0; a < 5; a++){
-					System.out.println(nombreFicheros.get(a)+"\t\t"+COS_TF_IDF1[a]+"\t"+COS_TF_IDF2[a]+"\t"+COS_TF_IDF3[a] );
-				}
-				break;*/
+				break;
 			}
 		}
 		System.out.println("Fin del programa.");
 	}
 
 	// MÉTODO PARA FORMATEAR LA CONSULTA
-	/*public static Map<String, Integer> consulta(String consulta) {
+	public static Map<String, Integer> consulta(String consulta) {
 		CreadorDiccionario creador = new CreadorDiccionario();
-		List<String> aux = new ArrayList<String>();
 		consulta = consulta.toLowerCase();
-		aux.add(consulta);
-		aux = creador.limpiador(aux);
-		ArrayList<String> palabras = creador.separador(aux);
+		consulta = creador.limpiador(consulta);
+		String [] palabras = creador.separador(consulta);
 		Map<String, Integer> pesos = new HashMap<>();
 		for (String name : palabras) {
 			Integer count = pesos.get(name);
@@ -150,23 +103,7 @@ public class Modelos {
 			}
 		}
 		return pesos;
-	}*/
-
-	// MÉTODO PARA MOSTRAR LOS RESULTADOS POR PANTALLA
-	public static void mostrarResultados(double[] r,ArrayList<String> nombreFicheros) {
-		for (int i = 0; i < r.length; i++) {
-			double aux1 = -1.0;
-			int b = 0;
-			for (int a = 0; a < r.length; a++) {
-				if (r[a] > aux1) {
-					aux1 = r[a];
-					b = a;
-				}
-			}
-			System.out.println("El documento " + nombreFicheros.get(b)
-					+ " tiene una relevancia de " + aux1
-					+ " sonbre la consulta realizada");
-			r[b] = -10.0;
-		}
 	}
+
+
 }
