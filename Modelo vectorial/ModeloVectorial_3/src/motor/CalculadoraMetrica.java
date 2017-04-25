@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.SingleSelectionModel;
+
+import org.bson.Document;
+
 public class CalculadoraMetrica {
 	private static ArrayList<String> recuperados;
 	private static Map<String, Integer> relevantes_totales;
@@ -15,17 +19,17 @@ public class CalculadoraMetrica {
 	private static float fprecision;
 	
 	public static void main(String[] args) {
-		Map <String, Integer> rel = new HashMap<String, Integer>();
-		rel.put("A",1);
-		rel.put("B",2);
+		Document  rel = new Document();
+		rel.put("A",2);
+		rel.put("B",3);
 		rel.put("D",3);
-		rel.put("E",3);
-		rel.put("G",3);
-		rel.put("H",3);
-		rel.put("J",3);
-		rel.put("L",3);
-		rel.put("N",3);
-		rel.put("Q",3);
+		rel.put("E",1);
+		rel.put("G",2);
+		rel.put("H",2);
+		rel.put("J",1);
+		rel.put("L",1);
+		rel.put("N",2);
+		rel.put("Q",1);
 		ArrayList<String> rec = new ArrayList<String>();
 		rec.add("A");
 		rec.add("B");
@@ -63,6 +67,16 @@ public class CalculadoraMetrica {
 		System.out.println("Recall R@5 "+ r10);
 		System.out.println("Precision P@5 "+ p10);
 		System.out.println("F-valor F@5 "+ f10);
+		ReciprocalRank rr = new ReciprocalRank();
+		float reciprocal = rr.calcReciprocalRank(rel, rec, 1);
+		System.out.println("ReciprocalRank 1 "+ reciprocal);
+		reciprocal = rr.calcReciprocalRank(rel, rec, 2);
+		System.out.println("ReciprocalRank 2 "+ reciprocal);
+		AveragePrecision ap = new AveragePrecision();
+		float average=ap.calcAveragePrecision(rel, rec, 1);
+		System.out.println("Average Precision "+ average);
+		CumulatedGain cg = new CumulatedGain();
+		cg.calcNDCG(rel, rec, 1);
 	}	
 	
 	/*public CalculadoraMetrica(){
