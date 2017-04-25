@@ -4,19 +4,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
 
 import org.bson.Document;
 import org.jsoup.Jsoup;
 
 import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoIterable;
 
 public class CreadorDiccionario {
 	private static Document idf;
@@ -26,13 +22,6 @@ public class CreadorDiccionario {
 		idf = new Document("_id", "IDF");
 	}
 	
-	//Setters and getters	
-	public static Document getIdf() {
-		return idf;
-	}
-	public static void setIdf(Document idf) {
-		CreadorDiccionario.idf = idf;
-	}
 
 	//Metodos
 	//Este método es el encargado de leer todos los ficheros HTML que se encuentran en 
@@ -41,6 +30,7 @@ public class CreadorDiccionario {
 		MongoClient client = new MongoClient( "localhost" , 27017);	
 		MongoDatabase db = client.getDatabase("motor");
 		MongoCollection<Document> dic = db.getCollection("diccionario");
+		MongoCollection<Document> idfColl = db.getCollection("idfColl");
 		for (int a = 0; a < 100; a++) {
 			String ruta = "";
 			if(a<10){
@@ -57,7 +47,12 @@ public class CreadorDiccionario {
 			    String fichero = "";
 			      try {
 			         archivo = new File (archivos[i].toString());
-			         nombreHTML = archivos[i].toString().replace(".\\htmls\\", "");
+			         if(a<10){
+			        	 nombreHTML = archivos[i].toString().replace(".\\html\\0"+a+"\\", ""); 
+						}else{
+						 nombreHTML = archivos[i].toString().replace(".\\html\\"+a+"\\", ""); 
+						}
+			         
 			         fr = new FileReader (archivo);
 			         br = new BufferedReader(fr);
 			         // Lectura del fichero
@@ -94,7 +89,7 @@ public class CreadorDiccionario {
 			}
 			i = 1;
 		}
-		dic.insertOne(idf);
+		idfColl.insertOne(idf);
 	}
 	//Eliminar las etiquetas de html y dejar solo el texto plano
 	public String limpiador(String html){
