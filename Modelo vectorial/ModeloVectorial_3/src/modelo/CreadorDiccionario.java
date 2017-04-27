@@ -52,7 +52,7 @@ public class CreadorDiccionario {
 						}else{
 						 nombreHTML = archivos[i].toString().replace(".\\html\\"+a+"\\", ""); 
 						}
-			         
+			         nombreHTML = nombreHTML.replace(".html", "");
 			         fr = new FileReader (archivo);
 			         br = new BufferedReader(fr);
 			         // Lectura del fichero

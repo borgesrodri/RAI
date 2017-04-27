@@ -1,6 +1,7 @@
 package modelo;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bson.Document;
 
@@ -34,48 +35,36 @@ public class Calculador {
 				    //Si la palabra se encuentra en el documento se suma su relevancia a la relevancia de la consulta 
 					if(doc.containsKey(palabra) && idf.containsKey(palabra)){
 						num += doc.getInteger(palabra) * idf.getDouble(palabra) * palCon.getValue() * idf.getDouble(palabra);
-						a += Math.pow((doc.getInteger(palabra) * idf.getDouble(palabra)), 2);
 						b += Math.pow((palCon.getValue()*idf.getDouble(palabra)), 2);
 					}
 				}
-				relevancia[i] = num / (Math.sqrt(a)*Math.sqrt(b));
-				if((Math.sqrt(a)*Math.sqrt(b)) == 0)
+				for (Entry<String, Object> todo : doc.entrySet()) {
+					if(!todo.getKey().equals("_id")){
+					a += Math.pow((Integer.parseInt(todo.getValue().toString()) * idf.getDouble(todo.getKey())), 2);
+					}
+				}
+				double den = (Math.sqrt(a)*Math.sqrt(b));
+				double rel = num /den;
+				relevancia[i] = rel ;
 				i++;
-				
-			}
-			
-			for (int j = 0; j < relevancia.length; j++) {
-				System.out.println(relevancia[i]);
 			}
 			
 			//Array con los valores a devolver
 			String[] nom = new String[100];
 			double[] res = new double[100];
 			
-			for(int j = 0; j < 100; j++){
-				res[j] = relevancia[j];
-				nom[j] = nombres[j];
-			}
-			for(int a = 100; a < relevancia.length;a++){
-				for (int j = 0; j < res.length; j++) {
-					if(relevancia[a] > res[a]){
-						res[j] = relevancia[a];
-						nom[j] = nombres[a];
-						j = res.length;
+			for (int j = 0; j < res.length; j++) {
+				double valor = -1.0;
+				int indice = 0;
+				for(int a = 0; a < relevancia.length; a++){
+					if(relevancia[a] > valor){
+						valor = relevancia[a];
+						indice = a;
 					}
 				}
-			}
-			for (int a = 0; a < res.length; a++) {
-				for (int j = 0; j < res.length; j++) {
-					if(res[j] > res[a]){
-						double aux = res[j];
-						String aux2 = nom[j]; 
-						res[j] = res[a];
-						res[a] = aux;
-						nom[j] = nom[a];
-						nom[a] = aux2;
-					}
-				}
+				res[j] = valor;
+				nom[j] = nombres[indice];
+				relevancia[indice] = -1.0;
 			}
 			return nom;
 		}

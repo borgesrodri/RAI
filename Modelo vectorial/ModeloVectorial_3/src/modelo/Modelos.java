@@ -80,9 +80,11 @@ public class Modelos {
 				Calculador calculador = new Calculador();
 				Document cons = con.find().first();
 				for ( Entry<String, Object>  consulta : cons.entrySet()) {
+					if(!consulta.getValue().toString().equals("topic")){
 					Map<String, Integer> pesos = consulta(consulta.getValue().toString());
 					consultas.add(pesos);
 					relevancias.add(calculador.CosTFIDF(pesos,dic,idf));
+					}
 				}
 				break;
 			}
