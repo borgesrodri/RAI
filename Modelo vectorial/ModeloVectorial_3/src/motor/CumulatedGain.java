@@ -103,6 +103,11 @@ public class CumulatedGain {
 				aux.append(r.getKey(), r.getValue());
 			}
 		}
+		for (Entry<String, Object> r : d.entrySet()) {
+			if((int)r.getValue()==-1){
+				aux.append(r.getKey(), r.getValue());
+			}
+		}
 		return (aux);
 	}
 	private static float log(float x, int base)

@@ -51,32 +51,29 @@ public class CalculadoraMetrica {
 		rec.add("R");
 		rec.add("S");
 		rec.add("T");
-
+		CalcEvaluationMetrics cem = new CalcEvaluationMetrics();
 		Recall r = new Recall();
-		float r5=r.calcRecall(rel, rec, 0, 5);
+		float r5=cem.calcRecall(rel, rec, 0, 5);
 		Precision p = new Precision();
 		float p5=p.calcPrecision(rel, rec, 0, 5);
 		Fvalue f =new Fvalue();
-		float f5=f.calcFvalue(r, p);
-		float r10=r.calcRecall(rel, rec, 0, 10);
-		float p10=p.calcPrecision(rel, rec, 0, 10);
-		System.out.println("Recall R@5 "+ r5);
-		float f10=f.calcFvalue(r, p);
-		System.out.println("Precision P@5 "+ p5);
-		System.out.println("F-valor F@5 "+ f5);
-		System.out.println("Recall R@5 "+ r10);
-		System.out.println("Precision P@5 "+ p10);
-		System.out.println("F-valor F@5 "+ f10);
-		ReciprocalRank rr = new ReciprocalRank();
-		float reciprocal = rr.calcReciprocalRank(rel, rec, 1);
-		System.out.println("ReciprocalRank 1 "+ reciprocal);
-		reciprocal = rr.calcReciprocalRank(rel, rec, 2);
-		System.out.println("ReciprocalRank 2 "+ reciprocal);
-		AveragePrecision ap = new AveragePrecision();
-		float average=ap.calcAveragePrecision(rel, rec, 1);
-		System.out.println("Average Precision "+ average);
-		CumulatedGain cg = new CumulatedGain();
-		cg.calcNDCG(rel, rec, 1);
+		float f5=cem.calcFvalue(r5, p5);
+		float r10=cem.calcRecall(rel, rec, 0, 10);
+		float p10=cem.calcPrecision(rel, rec, 0, 10);
+		float f10=cem.calcFvalue(r10, p10);
+		System.out.println("Recall R@5 "+ cem.formatFloat(r5));
+		System.out.println("Precision P@5 "+ cem.formatFloat(p5));
+		System.out.println("F-valor F@5 "+ cem.formatFloat(f5));
+		System.out.println("Recall R@10 "+ cem.formatFloat(r10));
+		System.out.println("Precision P@10 "+cem.formatFloat(p10));
+		System.out.println("F-valor F@10 "+ cem.formatFloat(f10));
+		float reciprocal = cem.calcReciprocalRank(rel, rec, 1);
+		System.out.println("ReciprocalRank 1 "+ cem.formatFloat(reciprocal));
+		reciprocal = cem.calcReciprocalRank(rel, rec, 2);
+		System.out.println("ReciprocalRank 2 "+ cem.formatFloat(reciprocal));
+		float average=cem.calcAveragePrecision(rel, rec, 1);
+		System.out.println("Average Precision "+ cem.formatFloat(average));
+		System.out.println(cem.formatArray(cem.calcnDCG(rel, rec)));
 	}	
 	
 	/*public CalculadoraMetrica(){
