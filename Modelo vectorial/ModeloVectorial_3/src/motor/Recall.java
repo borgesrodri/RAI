@@ -7,24 +7,23 @@ import org.bson.Document;
 
 public class Recall {
 	private float rcall;
-	public float calcRecall(Document relevantes, 
-			ArrayList<String> recuperados, int minRel, int cut) {
+
+	public float calcRecall(Document relevantes, ArrayList<String> recuperados, int minRel, int cut) {
 		Relevancia setrel = new Relevancia();
 		Document aux = new Document();
 		aux = setrel.minRel(relevantes, minRel);
 		int p = 0;
-		for (Entry<String, Object> r : aux.entrySet()) {
-			if(!r.getKey().equals("_id")){
-			for (int i = 0; i < cut; i++) {
+		for (int i = 0; i < cut; i++) {
+			for (Entry<String, Object> r : aux.entrySet()) {
 				if (r.getKey().equals(recuperados.get(i))) {
 					p++;
 				}
 			}
-			}
 		}
-		rcall=(float) p / aux.size();
+		rcall = (float) p / aux.size();
 		return rcall;
 	}
+
 	public float getRcall() {
 		return rcall;
 	}
