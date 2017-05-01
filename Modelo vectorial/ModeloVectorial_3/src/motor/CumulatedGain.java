@@ -14,7 +14,7 @@ public class CumulatedGain {
 		ArrayList<Float> dcg = dcg(aux,recuperados);
 		ArrayList<Float> dcgi = dcgIdeal(aux,recuperados);
 		ArrayList<Float> ndcg = new ArrayList<Float>();
-		for(int i = 0;i<dcgi.size();i++){
+		for(int i = 0;i<100;i++){
 			ndcg.add(dcg.get(i)/dcgi.get(i));
 		}
 		return (ndcg);

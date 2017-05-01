@@ -22,7 +22,6 @@ public class Wordnet {
 				args += " " + synonyms[j]; 
 			}
 		 }
-		 System.out.println(args);
 		 return args;
 	}
 }

@@ -9,6 +9,8 @@ import java.util.Scanner;
 
 import motor.CalcEvaluationMetrics;
 import motor.Precision;
+import motor.PrintResult;
+import motor.Resultados;
 import motor.Wordnet;
 
 import org.bson.Document;
@@ -19,6 +21,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 public class Modelos {
+	public static ArrayList<String> conS = new ArrayList<String>();
 	public static void main(String[] args) throws IOException {
 		MongoClient client = new MongoClient( "localhost" , 27017);	
 		MongoDatabase db = client.getDatabase("motor");
@@ -79,11 +82,16 @@ public class Modelos {
 				ArrayList<ArrayList<String>> relevancias = new ArrayList<ArrayList<String>>();
 				//ficheros más relevantes según el union para cada consulta
 				ArrayList<Document> union = separadorUnion(con);
+				//Contenido de las consultas del topics
 				ArrayList<Map<String, Integer>> consultas = new ArrayList<Map<String, Integer>>();
+				//Id's de las consultas del topics
+				ArrayList<String> topics = new ArrayList<String>();
 				Calculador calculador = new Calculador();
 				Document cons = con.find().first();
 				for ( Entry<String, Object>  consulta : cons.entrySet()) {
 					if(!consulta.getValue().toString().equals("topic")){
+					topics.add(consulta.getKey().toString());
+					topics.add(consulta.getKey().toString()+"Exp");
 					Map<String, Integer> pesos = consulta(consulta.getValue().toString());
 					Map<String, Integer> pesosExt = consultaExp(consulta.getValue().toString());
 					consultas.add(pesos);
@@ -92,30 +100,34 @@ public class Modelos {
 					relevancias.add(calculador.CosTFIDF(pesosExt,dic,idf));
 					}
 				}
-				
-				CalcEvaluationMetrics cem = new CalcEvaluationMetrics();
-				float r5=cem.calcRecall(union.get(0), relevancias.get(0), 1, 5);
-				Precision p = new Precision();
-				float p5=p.calcPrecision(union.get(0), relevancias.get(0), 1, 5);
-				float f5=cem.calcFvalue(r5, p5);
-				float r10=cem.calcRecall(union.get(0), relevancias.get(0), 0, 10);
-				float p10=cem.calcPrecision(union.get(0), relevancias.get(0), 0, 10);
-				float f10=cem.calcFvalue(r10, p10);
-				System.out.println("Recall R@5 "+ cem.formatFloat(r5));
-				System.out.println("Precision P@5 "+ cem.formatFloat(p5));
-				System.out.println("F-valor F@5 "+ cem.formatFloat(f5));
-				System.out.println("Recall R@10 "+ cem.formatFloat(r10));
-				System.out.println("Precision P@10 "+cem.formatFloat(p10));
-				System.out.println("F-valor F@10 "+ cem.formatFloat(f10));
-				float reciprocal1 = cem.calcReciprocalRank(union.get(0), relevancias.get(0), 1);
-				System.out.println("ReciprocalRank 1 "+ cem.formatFloat(reciprocal1));
-				float reciprocal2 = cem.calcReciprocalRank(union.get(0), relevancias.get(0), 2);
-				System.out.println("ReciprocalRank 2 "+ cem.formatFloat(reciprocal2));
-				float average=cem.calcAveragePrecision(union.get(0), relevancias.get(0), 1,100);
-				System.out.println("Average Precision "+ cem.formatFloat(average));
-				System.out.println(cem.formatArray(cem.calcnDCG(union.get(0), relevancias.get(0))));
-				
-				
+				for(int j = 0; j < consultas.size(); j++){
+					CalcEvaluationMetrics cem = new CalcEvaluationMetrics();
+					Resultados result = new Resultados();
+					Precision p = new Precision();
+					PrintResult pr = new PrintResult();
+					float r5=cem.calcRecall(union.get((j-(j%2))%2), relevancias.get(j), 1, 5);
+					float p5=p.calcPrecision(union.get((j-(j%2))%2), relevancias.get(j), 1, 5);
+					float f5=cem.calcFvalue(r5, p5);
+					float r10=cem.calcRecall(union.get((j-(j%2))%2), relevancias.get(j), 0, 10);
+					float p10=cem.calcPrecision(union.get((j-(j%2))%2), relevancias.get(j), 0, 10);
+					float f10=cem.calcFvalue(r10, p10);
+					float reciprocal1 = cem.calcReciprocalRank(union.get((j-(j%2))%2), relevancias.get(j), 1);
+					float reciprocal2 = cem.calcReciprocalRank(union.get((j-(j%2))%2), relevancias.get(j), 2);
+					float average=cem.calcAveragePrecision(union.get((j-(j%2))%2), relevancias.get(j), 1,100);
+					result.setR5(cem.formatFloat(r5));
+					result.setP5(cem.formatFloat(p5));
+					result.setF5(cem.formatFloat(f5));
+					result.setR10(cem.formatFloat(r10));
+					result.setP10(cem.formatFloat(p10));
+					result.setF10(cem.formatFloat(f10));
+					result.setReciprocall1(cem.formatFloat(reciprocal1));
+					result.setReciprocall2(cem.formatFloat(reciprocal2));
+					result.setAverage(cem.formatFloat(average));
+					result.setCalcnDCG(cem.formatArray(cem.calcnDCG(union.get((j-(j%2))%2), relevancias.get(j))));
+					pr.printFile(conS.get(j), topics.get(j), relevancias.get(j), result);
+
+				}
+							
 				break;
 			}
 		}
@@ -125,9 +137,9 @@ public class Modelos {
 	// MÉTODO PARA FORMATEAR LA CONSULTA
 	public static Map<String, Integer> consulta(String consulta) {
 		CreadorDiccionario creador = new CreadorDiccionario();
-		Wordnet wn = new Wordnet();
 		consulta = consulta.toLowerCase();
 		consulta = creador.limpiador(consulta);
+		conS.add(consulta);
 		String [] palabras = creador.separador(consulta);
 		Map<String, Integer> pesos = new HashMap<>();
 		for (String name : palabras) {
@@ -149,6 +161,7 @@ public class Modelos {
 			consulta = consulta.toLowerCase();
 			consulta = creador.limpiador(consulta);
 			consulta = wn.sinonimos(consulta);
+			conS.add(consulta);
 			String [] palabras = creador.separador(consulta);
 			Map<String, Integer> pesos = new HashMap<>();
 			for (String name : palabras) {
