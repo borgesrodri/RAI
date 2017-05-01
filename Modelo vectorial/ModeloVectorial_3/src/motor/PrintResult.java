@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class PrintResult {
 	public void printFile(String q, String id, ArrayList<String> recuperados,Resultados r) {
-		File fichero = new File("./resultados", "id");
+		File fichero = new File("./resultados/" + id);
 		PrintWriter pw = null;
 		try {
 			if (fichero.createNewFile()) {
@@ -25,9 +25,11 @@ public class PrintResult {
 				pw.println("		ReciprocalRank rel 2	 "+r.getReciprocall2());
 				pw.println("		AveragePrecision AP@100	"+r.getAverage());
 				pw.println("		nDCG	"+r.getCalcnDCG());
+				pw.close();
 			}
-			else
+			else{
 				System.out.println("No ha podido ser creado el fichero");
+			}		
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} 
