@@ -12,8 +12,10 @@ public class Relevancia {
 	public Document minRel(Document relevantes, int i){
 		Document aux = new Document();
 		for (Entry<String, Object> r: relevantes.entrySet()) {
-			if((int)r.getValue()>=i)
-				aux.put(r.getKey(), (Integer) r.getValue());
+				if(Integer.parseInt(r.getValue().toString())>=i)
+					aux.put(r.getKey(), Integer.parseInt(r.getValue().toString()));
+
+			
 	    }
 		return(aux);
 	}

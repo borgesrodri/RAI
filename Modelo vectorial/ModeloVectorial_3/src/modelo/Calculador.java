@@ -1,15 +1,14 @@
 package modelo;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bson.Document;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+
 
 public class Calculador {
 
@@ -17,7 +16,7 @@ public class Calculador {
 		
 	}
 	//MÉTODOS PARA EL CÁLCULO DE LAS RELEVANCIAS	
-		public String[] CosTFIDF(Map<String, Integer> consulta, MongoCollection<Document> dic,MongoCollection<Document> idfColl){
+		public ArrayList<String> CosTFIDF(Map<String, Integer> consulta, MongoCollection<Document> dic,MongoCollection<Document> idfColl){
 			Document idf = idfColl.find().first();
 			FindIterable<Document> result = dic.find();
 			double [] relevancia = new double[(int) (dic.count())];
@@ -26,7 +25,7 @@ public class Calculador {
 			//Probamos cada palabra de la consulta en todos los documentos
 			for (Document doc : result) {
 				//obtener el nombre de los ficheros html almacenados en la BD
-				nombres[i] = doc.getString("_id");
+				nombres[i] = doc.getString("_id").replace(".html", "");
 				double num = 0.0;
 				double a = 0.0;
 				double b = 0.0;			
@@ -66,7 +65,11 @@ public class Calculador {
 				nom[j] = nombres[indice];
 				relevancia[indice] = -1.0;
 			}
-			return nom;
+			ArrayList<String> respuesta = new ArrayList<String>();
+			for (int j = 0; j < nom.length; j++) {
+				respuesta.add(nom[j]);
+			}
+			return respuesta;
 		}
 		
 

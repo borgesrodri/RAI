@@ -39,9 +39,9 @@ public class CalcEvaluationMetrics {
 		return r;
 	}
 	public float calcAveragePrecision(Document relevantes, 
-			ArrayList<String> recuperados, int minRel){
+			ArrayList<String> recuperados, int minRel,int cut){
 		AveragePrecision ap = new AveragePrecision();
-		float r=ap.calcAveragePrecision(relevantes, recuperados, minRel);
+		float r=ap.calcAveragePrecision(relevantes, recuperados, minRel,cut);
 		//String s=decimals.format(r);
 		//r=Float.parseFloat(s);
 		return r;

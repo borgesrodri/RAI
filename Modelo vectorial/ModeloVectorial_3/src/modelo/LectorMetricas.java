@@ -31,6 +31,7 @@ public class LectorMetricas {
 				String[] sp = ln.split("\t");
 				doc.append(sp[0]+" "+sp[1], sp[2]);
 			}
+			br.close();
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -69,5 +70,6 @@ public class LectorMetricas {
 		con.drop();
 		con.insertOne(doc2);
 		con.insertOne(doc1);
+		client.close();
 	}
 }

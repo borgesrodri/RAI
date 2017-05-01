@@ -38,5 +38,10 @@
 	   		<artifactId>jaxp-api</artifactId>
 	    	<version>1.4.5</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.apache.lucene</groupId>
+		    <artifactId>lucene-wordnet</artifactId>
+		    <version>3.3.0</version>
+		</dependency>
 	</dependencies>
 </project>

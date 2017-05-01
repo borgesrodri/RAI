@@ -90,6 +90,7 @@ public class CreadorDiccionario {
 			i = 1;
 		}
 		idfColl.insertOne(idf);
+		client.close();
 	}
 	//Eliminar las etiquetas de html y dejar solo el texto plano
 	public String limpiador(String html){

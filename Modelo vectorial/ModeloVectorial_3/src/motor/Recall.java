@@ -14,10 +14,12 @@ public class Recall {
 		aux = setrel.minRel(relevantes, minRel);
 		int p = 0;
 		for (Entry<String, Object> r : aux.entrySet()) {
+			if(!r.getKey().equals("_id")){
 			for (int i = 0; i < cut; i++) {
 				if (r.getKey().equals(recuperados.get(i))) {
 					p++;
 				}
+			}
 			}
 		}
 		rcall=(float) p / aux.size();

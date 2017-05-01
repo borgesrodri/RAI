@@ -7,7 +7,7 @@ import org.bson.Document;
 
 public class AveragePrecision {
 	public float calcAveragePrecision(Document relevantes, 
-			ArrayList<String> recuperados, int minRel){
+			ArrayList<String> recuperados, int minRel, int cut){
 		float aprecision=0;
 		ArrayList<Float> average = new ArrayList<Float>();
 		Relevancia setrel = new Relevancia();
@@ -15,7 +15,7 @@ public class AveragePrecision {
 		aux = setrel.minRel(relevantes, minRel);
 		float p = 0,order=1;
 		for (Entry<String, Object> r : aux.entrySet()) {
-			for (int i = 0; i < recuperados.size(); i++) {
+			for (int i = 0; i < cut; i++) {
 				if (r.getKey().equals(recuperados.get(i))) {
 					p=i+1;
 					average.add((float) (order/p));
@@ -26,7 +26,7 @@ public class AveragePrecision {
 		for(int i=0; i<average.size();i++){
 			aprecision=aprecision+average.get(i);
 		}
-		aprecision=aprecision/average.size();
+		aprecision=aprecision/cut;
 		return aprecision;
 	}
 }
