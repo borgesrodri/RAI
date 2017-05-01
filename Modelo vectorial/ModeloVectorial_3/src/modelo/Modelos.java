@@ -107,10 +107,10 @@ public class Modelos {
 				System.out.println("Recall R@10 "+ cem.formatFloat(r10));
 				System.out.println("Precision P@10 "+cem.formatFloat(p10));
 				System.out.println("F-valor F@10 "+ cem.formatFloat(f10));
-				float reciprocal = cem.calcReciprocalRank(union.get(0), relevancias.get(0), 1);
-				System.out.println("ReciprocalRank 1 "+ cem.formatFloat(reciprocal));
-				reciprocal = cem.calcReciprocalRank(union.get(0), relevancias.get(0), 2);
-				System.out.println("ReciprocalRank 2 "+ cem.formatFloat(reciprocal));
+				float reciprocal1 = cem.calcReciprocalRank(union.get(0), relevancias.get(0), 1);
+				System.out.println("ReciprocalRank 1 "+ cem.formatFloat(reciprocal1));
+				float reciprocal2 = cem.calcReciprocalRank(union.get(0), relevancias.get(0), 2);
+				System.out.println("ReciprocalRank 2 "+ cem.formatFloat(reciprocal2));
 				float average=cem.calcAveragePrecision(union.get(0), relevancias.get(0), 1,100);
 				System.out.println("Average Precision "+ cem.formatFloat(average));
 				System.out.println(cem.formatArray(cem.calcnDCG(union.get(0), relevancias.get(0))));
