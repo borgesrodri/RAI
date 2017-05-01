@@ -108,8 +108,8 @@ public class Modelos {
 					float r5=cem.calcRecall(union.get((j-(j%2))%2), relevancias.get(j), 1, 5);
 					float p5=p.calcPrecision(union.get((j-(j%2))%2), relevancias.get(j), 1, 5);
 					float f5=cem.calcFvalue(r5, p5);
-					float r10=cem.calcRecall(union.get((j-(j%2))%2), relevancias.get(j), 0, 10);
-					float p10=cem.calcPrecision(union.get((j-(j%2))%2), relevancias.get(j), 0, 10);
+					float r10=cem.calcRecall(union.get((j-(j%2))%2), relevancias.get(j), 1, 10);
+					float p10=cem.calcPrecision(union.get((j-(j%2))%2), relevancias.get(j), 1, 10);
 					float f10=cem.calcFvalue(r10, p10);
 					float reciprocal1 = cem.calcReciprocalRank(union.get((j-(j%2))%2), relevancias.get(j), 1);
 					float reciprocal2 = cem.calcReciprocalRank(union.get((j-(j%2))%2), relevancias.get(j), 2);
