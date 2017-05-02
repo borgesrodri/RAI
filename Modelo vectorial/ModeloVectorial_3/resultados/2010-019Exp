@@ -104,6 +104,7 @@ where are google s data centers located  ar entropy mho randomness sec second si
 		F-valor 5	0,0833
 		Recall R@10	0,1628
 		Precision P@10	0,7000
+		F-valor 10	0,2642
 		ReciprocalRank rel 1	 0,1111
 		ReciprocalRank rel 2	 0,1111
 		AveragePrecision AP@100	0,3191

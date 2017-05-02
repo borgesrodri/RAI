@@ -104,6 +104,7 @@ is the open document format supported by microsoft wordpad  afford assailable ca
 		F-valor 5	0,1231
 		Recall R@10	0,0833
 		Precision P@10	0,5000
+		F-valor 10	0,1429
 		ReciprocalRank rel 1	 1,0000
 		ReciprocalRank rel 2	 1,0000
 		AveragePrecision AP@100	0,8478

@@ -104,6 +104,7 @@ what video game won spike s best driving game award in 2006
 		F-valor 5	0,0741
 		Recall R@10	0,1053
 		Precision P@10	0,8000
+		F-valor 10	0,1860
 		ReciprocalRank rel 1	 0,5000
 		ReciprocalRank rel 2	 0,0156
 		AveragePrecision AP@100	1,1923

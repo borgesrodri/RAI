@@ -104,6 +104,7 @@ what graphics card obtained the best score in 2008 for the battlefield 2142 benc
 		F-valor 5	0,1250
 		Recall R@10	0,0930
 		Precision P@10	0,4000
+		F-valor 10	0,1509
 		ReciprocalRank rel 1	 0,0132
 		ReciprocalRank rel 2	 0,0132
 		AveragePrecision AP@100	0,3795

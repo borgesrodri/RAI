@@ -50,8 +50,8 @@ public class Modelos {
 				LectorMetricas lm = new LectorMetricas();
 				lm.lecturas();
 				CreadorDiccionario cd = new CreadorDiccionario();
-				//dic.drop();
-				//idf.drop();
+				dic.drop();
+				idf.drop();
 				try {
 					cd.crearDiccionario();
 				} catch (IOException e) {

@@ -104,6 +104,7 @@ what 2gb ddr3 memory modules can be bought for under 70   remembering retention 
 		F-valor 5	0,0923
 		Recall R@10	0,1167
 		Precision P@10	0,7000
+		F-valor 10	0,2000
 		ReciprocalRank rel 1	 0,0179
 		ReciprocalRank rel 2	 0,0179
 		AveragePrecision AP@100	0,6449

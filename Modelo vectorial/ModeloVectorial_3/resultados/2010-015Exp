@@ -104,6 +104,7 @@ who was microsoft s chief executive officer in 2009  entropy mho randomness sec 
 		F-valor 5	0,0714
 		Recall R@10	0,0588
 		Precision P@10	0,3000
+		F-valor 10	0,0984
 		ReciprocalRank rel 1	 0,0154
 		ReciprocalRank rel 2	 0,0278
 		AveragePrecision AP@100	0,4505

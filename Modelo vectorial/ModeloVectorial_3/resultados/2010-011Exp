@@ -104,6 +104,7 @@ what is the default combination of kensington cables  nonpayment nonremittal com
 		F-valor 5	?
 		Recall R@10	0,0000
 		Precision P@10	0,0000
+		F-valor 10	?
 		ReciprocalRank rel 1	 0,0222
 		ReciprocalRank rel 2	 0,0222
 		AveragePrecision AP@100	0,1064

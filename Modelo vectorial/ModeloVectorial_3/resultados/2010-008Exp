@@ -104,6 +104,7 @@ how many web pages had google indexed between 2008 and 2009  entanglement net ne
 		F-valor 5	0,0323
 		Recall R@10	0,0702
 		Precision P@10	0,4000
+		F-valor 10	0,1194
 		ReciprocalRank rel 1	 0,0185
 		ReciprocalRank rel 2	 0,0152
 		AveragePrecision AP@100	0,4310
