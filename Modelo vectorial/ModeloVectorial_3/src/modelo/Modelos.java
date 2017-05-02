@@ -82,8 +82,6 @@ public class Modelos {
 				ArrayList<ArrayList<String>> relevancias = new ArrayList<ArrayList<String>>();
 				//ficheros más relevantes según el union para cada consulta
 				ArrayList<Document> union = separadorUnion(con);
-				//Contenido de las consultas del topics
-				ArrayList<Map<String, Integer>> consultas = new ArrayList<Map<String, Integer>>();
 				//Id's de las consultas del topics
 				ArrayList<String> topics = new ArrayList<String>();
 				Calculador calculador = new Calculador();
@@ -94,26 +92,25 @@ public class Modelos {
 					topics.add(consulta.getKey().toString()+"Exp");
 					Map<String, Integer> pesos = consulta(consulta.getValue().toString());
 					Map<String, Integer> pesosExt = consultaExp(consulta.getValue().toString());
-					consultas.add(pesos);
-					consultas.add(pesosExt);
 					relevancias.add(calculador.CosTFIDF(pesos,dic,idf));
 					relevancias.add(calculador.CosTFIDF(pesosExt,dic,idf));
 					}
 				}
-				for(int j = 0; j < consultas.size(); j++){
+				for(int j = 0; j < relevancias.size(); j++){
+					int a = (j-(j%2))/2;
 					CalcEvaluationMetrics cem = new CalcEvaluationMetrics();
 					Resultados result = new Resultados();
 					Precision p = new Precision();
 					PrintResult pr = new PrintResult();
-					float r5=cem.calcRecall(union.get((j-(j%2))%2), relevancias.get(j), 1, 5);
-					float p5=p.calcPrecision(union.get((j-(j%2))%2), relevancias.get(j), 1, 5);
+					float r5=cem.calcRecall(union.get(a), relevancias.get(j), 1, 5);
+					float p5=p.calcPrecision(union.get(a), relevancias.get(j), 1, 5);
 					float f5=cem.calcFvalue(r5, p5);
-					float r10=cem.calcRecall(union.get((j-(j%2))%2), relevancias.get(j), 1, 10);
-					float p10=cem.calcPrecision(union.get((j-(j%2))%2), relevancias.get(j), 1, 10);
+					float r10=cem.calcRecall(union.get(a), relevancias.get(j), 1, 10);
+					float p10=cem.calcPrecision(union.get(a), relevancias.get(j), 1, 10);
 					float f10=cem.calcFvalue(r10, p10);
-					float reciprocal1 = cem.calcReciprocalRank(union.get((j-(j%2))%2), relevancias.get(j), 1);
-					float reciprocal2 = cem.calcReciprocalRank(union.get((j-(j%2))%2), relevancias.get(j), 2);
-					float average=cem.calcAveragePrecision(union.get((j-(j%2))%2), relevancias.get(j), 1,100);
+					float reciprocal1 = cem.calcReciprocalRank(union.get(a), relevancias.get(j), 1);
+					float reciprocal2 = cem.calcReciprocalRank(union.get(a), relevancias.get(j), 2);
+					float average=cem.calcAveragePrecision(union.get(a), relevancias.get(j), 1,100);
 					result.setR5(cem.formatFloat(r5));
 					result.setP5(cem.formatFloat(p5));
 					result.setF5(cem.formatFloat(f5));
@@ -123,7 +120,16 @@ public class Modelos {
 					result.setReciprocall1(cem.formatFloat(reciprocal1));
 					result.setReciprocall2(cem.formatFloat(reciprocal2));
 					result.setAverage(cem.formatFloat(average));
-					result.setCalcnDCG(cem.formatArray(cem.calcnDCG(union.get((j-(j%2))%2), relevancias.get(j))));
+					result.setCalcnDCG(cem.formatArray(cem.calcnDCG(union.get(a), relevancias.get(j))));
+					for (int k = 0; k < relevancias.get(j).size(); k++) {
+						Document b = union.get(a);
+						for (Entry<String, Object> s: b.entrySet()) {
+							if(s.getKey().equals(relevancias.get(j).get(k))){
+								relevancias.get(j).add(k,relevancias.get(j).get(k)+" "+s.getValue());
+								relevancias.get(j).remove(k+1);
+							}
+						}
+					}
 					pr.printFile(conS.get(j), topics.get(j), relevancias.get(j), result);
 
 				}
