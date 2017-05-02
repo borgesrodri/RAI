@@ -39,8 +39,7 @@ public class Modelos {
 			System.out
 					.println("\nElija una de las siguientes opciones marcando el número correspondiente: \n "
 							+ "1. Crear/Actualizar diccionario \n "
-							+ "2. Realizar consulta \n " 
-							+ "3. Realizar consultas estáticas \n "
+							+ "2. Realizar consultas estáticas \n "
 							+ "9. Finalizar");
 			Scanner lector = new Scanner(System.in);
 			i = lector.nextInt();
@@ -60,19 +59,6 @@ public class Modelos {
 				System.out.println("El diccionario ha sido creado/actualizado");
 				break;
 			case 2:
-				if (dic.count() == 0) {
-					System.out
-							.println("Debe crear el diccionario antes de realizar una consulta");
-					break;
-				}
-				System.out.println("Introduzca la consulta que desea realizar");
-				Scanner teclado = new Scanner(System.in);
-				String consultaManual = teclado.nextLine();
-				Map<String, Integer> pesosManual = consulta(consultaManual);
-				Calculador calculadorManual = new Calculador();
-				//String[] relevanciaManual = calculadorManual.CosTFIDF(pesosManual, dic,idf);
-				break;
-			case 3:
 				if (dic.count() == 0) {
 					System.out
 							.println("Debe crear el diccionario antes de realizar una consulta");
