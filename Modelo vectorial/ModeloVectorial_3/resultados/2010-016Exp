@@ -104,6 +104,7 @@ what attributes do the table and body tags have in xhtml  act answer arrange bas
 		F-valor 5	?
 		Recall R@10	0,0417
 		Precision P@10	0,2000
+		F-valor 10	0,0690
 		ReciprocalRank rel 1	 0,0200
 		ReciprocalRank rel 2	 0,1667
 		AveragePrecision AP@100	0,3522

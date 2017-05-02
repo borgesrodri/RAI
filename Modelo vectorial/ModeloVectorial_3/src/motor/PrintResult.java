@@ -21,6 +21,7 @@ public class PrintResult {
 				pw.println("		F-valor 5	"+r.getF5());
 				pw.println("		Recall R@10	"+r.getR10());
 				pw.println("		Precision P@10	"+r.getP10());
+				pw.println("		F-valor 10	"+r.getF10());
 				pw.println("		ReciprocalRank rel 1	 "+r.getReciprocall1());
 				pw.println("		ReciprocalRank rel 2	 "+r.getReciprocall2());
 				pw.println("		AveragePrecision AP@100	"+r.getAverage());

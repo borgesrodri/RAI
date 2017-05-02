@@ -104,6 +104,7 @@ what laptop bags have airbag
 		F-valor 5	0,0800
 		Recall R@10	0,0889
 		Precision P@10	0,4000
+		F-valor 10	0,1455
 		ReciprocalRank rel 1	 0,0196
 		ReciprocalRank rel 2	 0,0196
 		AveragePrecision AP@100	0,4258

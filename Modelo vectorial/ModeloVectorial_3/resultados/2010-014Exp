@@ -104,6 +104,7 @@ who won the first acm gerard salton prize  beginning commencement firstly foremo
 		F-valor 5	0,1194
 		Recall R@10	0,1129
 		Precision P@10	0,7000
+		F-valor 10	0,1944
 		ReciprocalRank rel 1	 0,0400
 		ReciprocalRank rel 2	 0,0400
 		AveragePrecision AP@100	0,8329

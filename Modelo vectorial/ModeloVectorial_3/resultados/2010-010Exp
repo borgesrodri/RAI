@@ -104,6 +104,7 @@ what laptop bags have airbag  accept bear birth cause consume deliver experience
 		F-valor 5	0,0800
 		Recall R@10	0,1333
 		Precision P@10	0,6000
+		F-valor 10	0,2182
 		ReciprocalRank rel 1	 0,0217
 		ReciprocalRank rel 2	 0,0217
 		AveragePrecision AP@100	0,4551

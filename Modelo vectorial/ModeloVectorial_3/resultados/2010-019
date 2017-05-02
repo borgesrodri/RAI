@@ -104,6 +104,7 @@ where are google s data centers located
 		F-valor 5	0,0417
 		Recall R@10	0,1395
 		Precision P@10	0,6000
+		F-valor 10	0,2264
 		ReciprocalRank rel 1	 0,1250
 		ReciprocalRank rel 2	 0,1250
 		AveragePrecision AP@100	0,2606

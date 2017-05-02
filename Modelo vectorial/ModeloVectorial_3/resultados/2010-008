@@ -104,6 +104,7 @@ how many web pages had google indexed between 2008 and 2009
 		F-valor 5	0,0323
 		Recall R@10	0,0526
 		Precision P@10	0,3000
+		F-valor 10	0,0896
 		ReciprocalRank rel 1	 0,0159
 		ReciprocalRank rel 2	 0,0137
 		AveragePrecision AP@100	0,4951

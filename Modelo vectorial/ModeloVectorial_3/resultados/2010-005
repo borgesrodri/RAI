@@ -104,6 +104,7 @@ who is the head of apple
 		F-valor 5	?
 		Recall R@10	0,0741
 		Precision P@10	0,2000
+		F-valor 10	0,1081
 		ReciprocalRank rel 1	 0,0105
 		ReciprocalRank rel 2	 0,0105
 		AveragePrecision AP@100	0,1368
