@@ -1,5 +1,5 @@
 package modelo;
-import org.tartarus.snowball.ext.PorterStemmer;
+//import org.tartarus.snowball.ext.PorterStemmer;
 public class Indizador {
 	public Indizador(){
 		
@@ -13,7 +13,7 @@ public class Indizador {
 	}*/
 	public String stemTerm(String term){
 		if(term.endsWith("ed")){
-			return term.substring(0, term.length()-1);
+			return term.substring(0, term.length()-2);
 		}
 		if(term.endsWith("ing")){
 			return term.substring(0, term.length()-3);

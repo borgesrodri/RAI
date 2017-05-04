@@ -16,5 +16,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/borge/Desktop/clase/2016-2017/Segundo cuatri/rai/GITHUB/Modelo vectorial/MotorRecuperacionAmpliado_3/jaws-bin-1.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
