@@ -78,7 +78,10 @@ public class CumulatedGain {
 				dcg.add((float)(dcg.get(i-1)+g.get(i)/d));
 			}
 		}
-		return (dcg);
+		ArrayList<Float> r = new ArrayList<Float>();
+		r.add(dcg.get(9));
+		r.add(dcg.get(99));
+		return r;
 		
 	}
 	private static Document orderDocument (Document d){

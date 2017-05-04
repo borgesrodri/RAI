@@ -117,7 +117,7 @@ public class Modelos {
 						}
 					}
 					pr.printFile(conS.get(j), topics.get(j), relevancias.get(j), result);
-
+					pr.printAverage();
 				}
 							
 				break;
