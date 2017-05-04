@@ -77,9 +77,11 @@ public class PrintResult {
 				pw.println("------------*------------");
 				pw.println("Average F-valor 5				"+f5/count);
 				pw.println("------------*------------");
-				pw.println("Average Recall R@10				"+r5/count);
+				pw.println("Average Recall R@10				"+r10/count);
 				pw.println("------------*------------");
-				pw.println("Average Precision P@10			"+p5/count);
+				pw.println("Average Precision P@10			"+p10/count);
+				pw.println("------------*------------");
+				pw.println("Average F-valor 10				"+f10/count);
 				pw.println("------------*------------");
 				pw.println("Average ReciprocalRank rel 1	"+rr1/count);
 				pw.println("------------*------------");
