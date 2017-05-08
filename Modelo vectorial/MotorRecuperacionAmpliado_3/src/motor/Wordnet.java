@@ -48,12 +48,12 @@ public class Wordnet {
 			exp.put(consulta[i],false);
 			if(pos[i].equals("NOUN")){
 				Synset[] synsets = (Synset[]) database.getSynsets(consulta[i], SynsetType.NOUN);
-				if (synsets.length > 1 && synsets.length <= 3) {
+				if (synsets.length > 1) {
 					for (int j = 0; j < synsets.length; j++)
 					{
 						String[] wordForms = synsets[j].getWordForms();
 						for (int k = 0; k < wordForms.length; k++) {
-							if (!exp.containsKey(wordForms[j]))exp.put(wordForms[k],true);
+							if (!exp.containsKey(wordForms[k]))exp.put(wordForms[k],true);
 						}
 					}
 				}else{
@@ -62,7 +62,7 @@ public class Wordnet {
 						{
 							String[] wordForms = synsets[j].getWordForms();
 							for (int k = 0; k < wordForms.length; k++) {
-								if (!exp.containsKey(wordForms[j]))exp.put(wordForms[k],false);
+								if (!exp.containsKey(wordForms[k]))exp.put(wordForms[k],false);
 							}
 						}
 					}

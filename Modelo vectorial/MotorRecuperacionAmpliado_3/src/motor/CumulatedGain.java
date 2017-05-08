@@ -17,7 +17,10 @@ public class CumulatedGain {
 		for(int i = 0;i<100;i++){
 			ndcg.add(dcg.get(i)/dcgi.get(i));
 		}
-		return (ndcg);
+		ArrayList<Float> r = new ArrayList<Float>();
+		r.add(ndcg.get(9));
+		r.add(ndcg.get(99));
+		return (r);
 	} 
 	private static ArrayList<Float> dcg(Document relevantes, 
 			ArrayList<String> recuperados){
@@ -78,10 +81,7 @@ public class CumulatedGain {
 				dcg.add((float)(dcg.get(i-1)+g.get(i)/d));
 			}
 		}
-		ArrayList<Float> r = new ArrayList<Float>();
-		r.add(dcg.get(9));
-		r.add(dcg.get(99));
-		return r;
+		return dcg;
 		
 	}
 	private static Document orderDocument (Document d){

@@ -23,52 +23,51 @@ public class PrintResult {
 		count=0;
 	}
 	public void printFile(String q, String id, ArrayList<String> recuperados,Resultados r) {
-		File fichero = new File("./resultados/" + id);
+		
 		PrintWriter pw = null;
 		try {
-			if (fichero.createNewFile()) {
+			File fichero = new File("./resultados/" + id);
+			
 				System.out.println("El fichero se ha creado correctamente");
 				pw = new PrintWriter(fichero);
 				pw.println(q);
 				for (int i = 0; i < recuperados.size(); i++)
 	                pw.println("	" + recuperados.get(i));
 				pw.println("		Recall R@5	"+r.getR5());
-				r5+=Float.parseFloat(r.getR5());
+				r5+=Float.parseFloat(r.getR5().replace(',', '.'));
 				pw.println("		Precision P@5	"+r.getP5());
-				p5+=Float.parseFloat(r.getP5());
+				p5+=Float.parseFloat(r.getP5().replace(',', '.'));
 				pw.println("		F-valor 5	"+r.getF5());
-				f5+=Float.parseFloat(r.getF5());
+				f5+=Float.parseFloat(r.getF5().replace(',', '.'));
 				pw.println("		Recall R@10	"+r.getR10());
-				r10+=Float.parseFloat(r.getR10());
+				r10+=Float.parseFloat(r.getR10().replace(',', '.'));
 				pw.println("		Precision P@10	"+r.getP10());
-				p10+=Float.parseFloat(r.getP10());
+				p10+=Float.parseFloat(r.getP10().replace(',', '.'));
 				pw.println("		F-valor 10	"+r.getF10());
-				f10+=Float.parseFloat(r.getF10());
+				f10+=Float.parseFloat(r.getF10().replace(',', '.'));
 				pw.println("		ReciprocalRank rel 1	 "+r.getReciprocall1());
-				rr1+=Float.parseFloat(r.getReciprocall1());
+				rr1+=Float.parseFloat(r.getReciprocall1().replace(',', '.'));
 				pw.println("		ReciprocalRank rel 2	 "+r.getReciprocall2());
-				rr2+=Float.parseFloat(r.getReciprocall2());
+				rr2+=Float.parseFloat(r.getReciprocall2().replace(',', '.'));
 				pw.println("		AveragePrecision AP@100	"+r.getAverage());
-				ap+=Float.parseFloat(r.getAverage());
+				ap+=Float.parseFloat(r.getAverage().replace(',', '.'));
 				pw.println("		nDCG 10	"+r.getCalcnDCG().get(0));
-				ndcg10+=Float.parseFloat(r.getCalcnDCG().get(0));
+				ndcg10+=Float.parseFloat(r.getCalcnDCG().get(0).replace(',', '.'));
 				pw.println("		nDCG 100	"+r.getCalcnDCG().get(1));
-				ndcg10+=Float.parseFloat(r.getCalcnDCG().get(1));
+				ndcg100+=Float.parseFloat(r.getCalcnDCG().get(1).replace(',', '.'));
 				pw.close();
 				count++;
-			}
-			else{
-				System.out.println("No ha podido ser creado el fichero");
-			}		
 		} catch (IOException ioe) {
+			System.out.println("No ha podido ser creado el fichero");
 			ioe.printStackTrace();
 		} 
 	}
-	public void printAverage(){
-		File fichero = new File("./resultados/TotalAverage" );
+	public void printAverage(String nomb){
+		
 		PrintWriter pw = null;
 		try {
-			if (fichero.createNewFile()) {
+			File fichero = new File("./resultados/"+nomb );
+			
 				System.out.println("El fichero se ha creado correctamente");
 				pw = new PrintWriter(fichero);
 				pw.println("Average Recall R@5				"+r5/count);
@@ -93,11 +92,9 @@ public class PrintResult {
 				pw.println("------------*------------");
 				pw.println("Average nDCG 100				"+ndcg100/count);
 				pw.close();
-			}
-			else{
-				System.out.println("No ha podido ser creado el fichero");
-			}		
+
 		} catch (IOException ioe) {
+			System.out.println("No ha podido ser creado el fichero");
 			ioe.printStackTrace();
 		} 
 	}

@@ -57,7 +57,10 @@ public class CalcEvaluationMetrics {
 		return r;
 	}
 	public String formatFloat(float f){
+		if(!Float.isInfinite(f) && !Float.isNaN(f))
 		return decimals.format(f);
+		else
+		return "0.0";
 	}
 	public ArrayList<String> formatArray(ArrayList<Float> a){
 		ArrayList<String> r =new ArrayList<String>();

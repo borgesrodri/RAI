@@ -1,0 +1,21 @@
+Average Recall R@5				0.04867
+------------*------------
+Average Precision P@5			0.54
+------------*------------
+Average F-valor 5				0.08892
+------------*------------
+Average Recall R@10				0.098409995
+------------*------------
+Average Precision P@10			0.53499997
+------------*------------
+Average F-valor 10				0.16463
+------------*------------
+Average ReciprocalRank rel 1	0.09791999
+------------*------------
+Average ReciprocalRank rel 2	0.076230004
+------------*------------
+Average AveragePrecision AP@100	0.487985
+------------*------------
+Average nDCG 10					0.38255996
+------------*------------
+Average nDCG 100				0.58681

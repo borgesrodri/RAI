@@ -77,11 +77,19 @@ public class Modelos {
 				}
 				CalculadorMetricas cm = new CalculadorMetricas();
 				PrintResult pr = new PrintResult();
+				PrintResult prExp = new PrintResult();
 				for(int j = 0; j < relevancias.size(); j++){
-					int a = (j-(j%2))/2;
-					cm.calculador(relevancias.get(j), union.get(a),conS.get(j),topics.get(j));	
+					int a;
+					if(j%2 == 0){
+					a = (j-(j%2))/2;
+					cm.calculador(relevancias.get(j), union.get(a),conS.get(j),topics.get(j),pr);
+					}else{
+					a = (j-(j%2))/2;
+					cm.calculador(relevancias.get(j), union.get(a),conS.get(j),topics.get(j),prExp);
+					}
 				}
-				pr.printAverage();		
+				pr.printAverage("media");
+				prExp.printAverage("mediaExpandidos");
 				break;
 			}
 		}
@@ -94,10 +102,8 @@ public class Modelos {
 		consulta = creador.limpiador(consulta);
 		conS.add(consulta);
 		String [] palabras = creador.separador(consulta);
-		
 		Map<String, Integer> pesos = new HashMap<>();
 		for (String name : palabras) {
-			System.out.println(name);
 			Integer count = pesos.get(name);
 			if (!name.equals("")) {
 				if (count == null) {
@@ -122,7 +128,7 @@ public class Modelos {
 			String a = "";
 			Map<String, PesoPolisemia> pesos = new HashMap<>();
 			for (Entry<String, Boolean> name : con.entrySet()) {
-				a += name.getKey();
+				a += name.getKey()+" ";
 				PesoPolisemia count = pesos.get(name.getKey());
 				if (!name.getKey().equals("")) {
 					if (count == null) {

@@ -12,12 +12,11 @@ import org.bson.Document;
 
 public class CalculadorMetricas {
 	
-	public void calculador(ArrayList<String> relevancias, Document union, String conS, String topics){
+	public void calculador(ArrayList<String> relevancias, Document union, String conS, String topics, PrintResult pr){
 		
 		CalcEvaluationMetrics cem = new CalcEvaluationMetrics();
 		Resultados result = new Resultados();
 		Precision p = new Precision();
-		PrintResult pr = new PrintResult();
 		float r5=cem.calcRecall(union, relevancias, 1, 5);
 		float p5=p.calcPrecision(union, relevancias, 1, 5);
 		float f5=cem.calcFvalue(r5, p5);

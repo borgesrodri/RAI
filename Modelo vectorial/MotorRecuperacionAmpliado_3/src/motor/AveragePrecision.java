@@ -1,32 +1,22 @@
 package motor;
 
 import java.util.ArrayList;
-import java.util.Map.Entry;
-
 import org.bson.Document;
 
 public class AveragePrecision {
 	public float calcAveragePrecision(Document relevantes, ArrayList<String> recuperados, int minRel, int cut) {
 		float aprecision = 0;
-		ArrayList<Float> average = new ArrayList<Float>();
-		Relevancia setrel = new Relevancia();
-		Document aux = new Document();
-		aux = setrel.minRel(relevantes, minRel);
-		float p = 0, order;
-		for (int i = 0; i < cut; i++) {
-			order=1;
-			for (Entry<String, Object> r : aux.entrySet()) {
-				if (r.getKey().equals(recuperados.get(i))) {
-					p = i + 1;
-					average.add((float) (order / p));
-				}
-				order++;
+		float average = 0.0f;
+		Precision p = new Precision();
+		int count = 0;
+		for (int i = 1; i <= cut; i++) {
+			float a = p.calcPrecision(relevantes, recuperados, minRel, i);
+			if(a != 0.0 && !Float.isInfinite(a) && !Float.isNaN(a)){
+			average += a;
+			count ++;
 			}
 		}
-		for (int i = 0; i < average.size(); i++) {
-			aprecision = aprecision + average.get(i);
-		}
-		aprecision = aprecision / cut;
+		aprecision = average / count;
 		return aprecision;
 	}
 }
